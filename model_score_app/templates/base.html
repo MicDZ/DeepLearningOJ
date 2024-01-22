@@ -1,0 +1,40 @@
+<!-- your_project/your_app/templates/base.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Default Title{% endblock %}</title>
+  <!-- 这里可以引入公共CSS、JS文件或者Meta标签 -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'main.css' %}">
+</head>
+<body>
+
+<!-- 头部区域 -->
+<header>
+  <nav>
+    <!-- 导航栏内容 -->
+  </nav>
+</header>
+
+<!-- 主体内容区 -->
+<main>
+  <center>
+    {% block content %}
+    <!-- 子模板将覆盖此处的内容 -->
+    {% endblock %}
+  </center>
+
+</main>
+
+<!-- 底部区域 -->
+<footer>
+  <!-- 页脚内容 -->
+</footer>
+
+<!-- 可能需要的脚本引用 -->
+<!--<script src="{% static 'js/main.js' %}"></script>-->
+</body>
+</html>

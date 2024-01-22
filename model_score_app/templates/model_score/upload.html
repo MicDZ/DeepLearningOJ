@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>上传</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="username">姓名：</label>
+    <input type="text" id="username" name="username" required>
+    <br>
+    <label for="model_file">模型文件：</label>
+    <input type="file" name="model_file" accept=".pt">
+    <br>
+    <button id="upload-button" type="submit">上传模型文件</button>
+    <a href="/ranklist">查看排行榜</a>
+    <a href="/submissions">查看提交列表</a>
+
+
+</form>
+<script>
+    $(document).ready(function() {
+        // 为上传按钮绑定点击事件
+        $('#upload-button').on('click', function() {
+            var $btn = $(this);
+
+            // 禁用上传按钮防止重复点击
+            $btn.prop('disabled', true);
+
+            // 获取选中的文件
+            var file = $('#file-input')[0].files[0];
+
+            // 使用FormData对象构造POST数据
+            var formData = new FormData();
+            formData.append('file', file);
+
+            // 发起异步上传请求
+            $.ajax({
+                url: '/your/upload/url',
+                type: 'POST',
+                data: formData,
+                processData: false,  // 必须设置为false，否则jQuery会尝试对FormData进行序列化
+                contentType: false,   // 设置为false，让浏览器自动判断内容类型
+                success: function(response) {
+                    // 上传成功后重新启用按钮并执行其他操作
+                    $btn.prop('disabled', false);
+                    // 跳转到结果页面
+                    window.location.href = '/submissions.html';
+                    alert('File uploaded successfully!');
+                },
+                error: function(xhr, status, error) {
+                    // 错误处理后重新启用按钮
+                    $btn.prop('disabled', false);
+                    window.location.href = '/submissions.html';
+                    alert('Error uploading file: ' + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
+

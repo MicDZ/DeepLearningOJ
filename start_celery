@@ -1,0 +1,1 @@
+celery -A model_score_project worker --loglevel=info --concurrency=1 -D

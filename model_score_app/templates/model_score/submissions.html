@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- model_score/templates/model_score/ranklist.html -->
+<h1>提交记录</h1>
+<table>
+    <tbody>
+    <tr>
+        <td>姓名</td>
+        <td>得分</td>
+        <td>上传时间</td>
+        <td>状态</td>
+        <td>提交ID</td>
+    </tr>
+    {% for score in scores %}
+    <tr>
+        <td>{{ score.username }}</td>
+        <td>{{ score.score }}</td>
+
+        <td>{{ score.upload_time}}</td>
+        <td>{{ score.status}}</td>
+        <td><a href="/submissions/{{ score.id }}">{{ score.id}}</a></td>
+
+    </tr>
+    </tbody>
+
+    {% empty %}
+    <p>No scores available.</p>
+    {% endfor %}
+</table>
+<a href="/upload">提交</a>
+<a href="/ranklist">排行榜</a>
+
+{% endblock %}
+
