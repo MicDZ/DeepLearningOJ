@@ -98,6 +98,13 @@ def submission_detail_view(request, file_id):
     submission = ModelScore.objects.get(id=file_id)
     scores = []
     uploaded_at_in_utc = submission.upload_time
+    # 获取当前时间，若与上传时间相差超过1分钟，则认为评分超时
+    now = timezone.now()
+    if now - uploaded_at_in_utc > timezone.timedelta(minutes=1) and submission.status == 'Running':
+        submission.status = 'Unknown Error'
+        submission.save()
+        ModelScore.objects.filter(id=file_id).update(status='Unknown Error')
+
     beijing_tz = pytz.timezone('Asia/Shanghai')
     uploaded_at_in_bj = uploaded_at_in_utc.astimezone(beijing_tz)
     score = {
