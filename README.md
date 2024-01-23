@@ -36,3 +36,12 @@ python manage.py runserver
 ```shell
 gunicorn -c gunicorn.conf.py model_score_project.wsgi:application
 ```
+
+## 界面展示
+**排行榜**
+
+![ranklist|300](./asset/ranklist.png)
+
+**提交**
+
+![upload|400](./asset/upload.png)
