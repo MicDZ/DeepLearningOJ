@@ -11,6 +11,8 @@
     <input type="file" name="model_file" accept=".pt">
     <br>
     <button id="upload-button" type="submit">上传模型文件</button>
+    <p style="width: 400px">本网站需上传由torch.jit.save导出的.pt模型，且模型输出层为10个维度，对应数字分类的类别0-9的置信度，评测系统将选数值最高的类别作为本图的预测类别</p>
+
     <a href="/ranklist">查看排行榜</a>
     <a href="/submissions">查看提交列表</a>
 
