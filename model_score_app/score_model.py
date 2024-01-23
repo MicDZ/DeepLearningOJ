@@ -22,12 +22,15 @@ def predict(model, img_path, device):
     img = transforms.ToTensor()(img)
     img = img.unsqueeze(0)
     img = img.to(device)
-    result = model(img)
+    try:
+        result = model(img)
+    except:
+        return 0, 'Input Error'
     if result.shape[1] != 10:
-        return 'Error', '输出维度不为10'
+        return 0, 'Output Error'
     pred = result.argmax(dim=1, keepdim=True)
 
-    return pred.item()
+    return pred.item(), 'Success'
 
 
 def evaluate(model, folder_path, device):
@@ -46,17 +49,17 @@ def evaluate(model, folder_path, device):
             with open(label_path, 'r') as f:
                 label = int(f.read().strip())
 
-            pred = predict(model, img_path, device)
+            pred, status = predict(model, img_path, device)
 
             # Handle error
-            if type(pred) == tuple and pred[0] == 'Error':
+            if type(pred) == tuple and pred[0] != 'Success':
                 return pred
 
             if pred == label:
                 correct[label] += 1
             total[label] += 1
     except TimeoutException:
-        return 'Error', 'Evaluation Time Limit Exceeded'
+        return 'Evaluation Time Limit Exceeded', 0
 
     finally:
         signal.alarm(0)
@@ -64,7 +67,7 @@ def evaluate(model, folder_path, device):
     scores = [f'{int(correct[i])}/{int(total[i])}' for i in range(10)]
     overall_score = sum(correct) / sum(total)
 
-    return 'Correct', (scores, overall_score)
+    return 'Success',  overall_score
 
 
 @shared_task(bind=True, expires=60)
@@ -86,17 +89,7 @@ def score_model(self, file_id):
     # model.eval()
     # model.to(device)
     folder_path = './test_data/handwritten_ocr'
-    status, content = evaluate(model, folder_path, device)
+    status, score = evaluate(model, folder_path, device)
 
-    score = 0
-    if status == 'Correct':
-        # for i in range(10):
-        # print(f'{i}: {content[0][i]}')
-        score = content[1]
-        info = "Success"
-    elif status == 'Error':
-        score = 0
-        info = content
-
-    ModelScore.objects.filter(id=file_id).update(score=score * 100, status=info)
+    ModelScore.objects.filter(id=file_id).update(score=score * 100, status=status)
     return
