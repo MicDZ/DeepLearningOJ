@@ -3,7 +3,7 @@
 
 {% block content %}
     <h1>上传</h1>
-<form method="POST" enctype="multipart/form-data">
+<form method="POST" action="{% url 'upload_view' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="hidden" name="action" value="upload">
     <label for="username">姓名：</label>
@@ -11,13 +11,16 @@
     <input type="text" id="username" name="username" value="" readonly><br>
     <br>
     <label for="model_file">模型文件：</label>
-    <input type="file" name="model_file" accept=".pt">
+
+    <input type="file" name="model_file" accept=".pt" required>
     <br>
     <button id="upload-button" type="submit">上传模型文件</button>
     <p style="width: 400px">本网站需上传由torch.jit.save导出的.pt模型，且模型输出层为10个维度，对应数字分类的类别0-9的置信度，评测系统将选数值最高的类别作为本图的预测类别</p>
 
     <a href="/ranklist">查看排行榜</a>
     <a href="/submissions">查看提交列表</a>
+    <br>
+    <a href="https://github.com/MicDZ/DeepLearningOJ">求个star</a>
 </form>
     <button onclick="logout()">退出登录</button>
 <script>
@@ -35,10 +38,7 @@
 
     // 将username写入#username
     // 将序列化的username解码后写入#username
-    console.log(username);
     document.getElementById("username").value = JSON.parse(eval('('+username+')'));
-
-    console.log("in");
 
     function logout() {
             // 清空Cookie

@@ -17,7 +17,9 @@ from django.http import HttpResponse
 import urllib.parse
 def upload_view(request):
     # 从cookies中读取token
+    print("in")
     token = request.COOKIES.get('token')
+    print(token)
     # 如果token不存在，则返回错误信息
     if not token or not User.objects.filter(token=token).exists():
         # 重定向到登录页面
@@ -29,7 +31,6 @@ def upload_view(request):
         # 判断是否是upload请求
         action = request.POST.get('action')
         if action == 'upload':
-
             # 从数据库获取姓名
             username = User.objects.get(token=token).username
             if not username:
