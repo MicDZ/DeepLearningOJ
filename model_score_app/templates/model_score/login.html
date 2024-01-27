@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- model_score/templates/model_score/ranklist.html -->
+<h1>登录</h1>
+
+    {% if error_message %}
+<p>{{ error_message }}</p>
+    {% endif %}
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="login">
+    <label for="username">姓名：</label>
+    <input type="text" id="username" name="username" required>
+    <br>
+    <label for="username">密码：</label>
+    <input type="password" id="password" name="password" required>
+    <br>
+    <input type="submit" value="登录">
+</form>
+
+{% endblock %}
+
+

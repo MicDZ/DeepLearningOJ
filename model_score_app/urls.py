@@ -6,6 +6,7 @@ urlpatterns = [
     path('ranklist/', views.ranklist_view, name='ranklist_view'),
     path('submissions/', views.submissions_view, name='submissions_view'),
     path('submissions/<uuid:file_id>/', views.submission_detail_view, name='submission_detail_view'),
+    path('login/', views.login_view, name='login_view'),
     # 添加排行榜页面的URL路由
 ]
 

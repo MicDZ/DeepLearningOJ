@@ -18,3 +18,11 @@ class FileUpload(models.Model):
 
     def __str__(self):
         return f"{self.file.name} ({self.upload_time})"
+
+class User(models.Model):
+    # username 使用uft-8编码，最大长度为200
+    username = models.CharField(max_length=200,default='default_username')
+    password = models.CharField(max_length=200,default='default_password')
+    token = models.CharField(max_length=200,default='default_token')
+    def __str__(self):
+        return f"{self.username}'s password: {self.password}"

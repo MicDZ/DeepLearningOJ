@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
     <h1>上传</h1>
-<form method="post" enctype="multipart/form-data">
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
+    <input type="hidden" name="action" value="upload">
     <label for="username">姓名：</label>
-    <input type="text" id="username" name="username" required>
+<!--    从cookies中获取username，直接呈现-->
+    <input type="text" id="username" name="username" value="" readonly><br>
     <br>
     <label for="model_file">模型文件：</label>
     <input type="file" name="model_file" accept=".pt">
@@ -15,48 +18,35 @@
 
     <a href="/ranklist">查看排行榜</a>
     <a href="/submissions">查看提交列表</a>
-
-
 </form>
+    <button onclick="logout()">退出登录</button>
 <script>
-    $(document).ready(function() {
-        // 为上传按钮绑定点击事件
-        $('#upload-button').on('click', function() {
-            var $btn = $(this);
+// 将cookie中的username写入#username
+    // 获取cookies中的username
+    var cookies = document.cookie.split(';');
+    var username = '';
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.startsWith('username=')) {
+            username = cookie.substring('username='.length, cookie.length);
+            break;
+        }
+    }
 
-            // 禁用上传按钮防止重复点击
-            $btn.prop('disabled', true);
+    // 将username写入#username
+    // 将序列化的username解码后写入#username
+    console.log(username);
+    document.getElementById("username").value = JSON.parse(eval('('+username+')'));
 
-            // 获取选中的文件
-            var file = $('#file-input')[0].files[0];
+    console.log("in");
 
-            // 使用FormData对象构造POST数据
-            var formData = new FormData();
-            formData.append('file', file);
-
-            // 发起异步上传请求
-            $.ajax({
-                url: '/your/upload/url',
-                type: 'POST',
-                data: formData,
-                processData: false,  // 必须设置为false，否则jQuery会尝试对FormData进行序列化
-                contentType: false,   // 设置为false，让浏览器自动判断内容类型
-                success: function(response) {
-                    // 上传成功后重新启用按钮并执行其他操作
-                    $btn.prop('disabled', false);
-                    // 跳转到结果页面
-                    window.location.href = '/submissions.html';
-                    alert('File uploaded successfully!');
-                },
-                error: function(xhr, status, error) {
-                    // 错误处理后重新启用按钮
-                    $btn.prop('disabled', false);
-                    window.location.href = '/submissions.html';
-                    alert('Error uploading file: ' + xhr.responseText);
-                }
-            });
-        });
-    });
+    function logout() {
+            // 清空Cookie
+           document.cookie = '';
+           document.token = '';
+            // 不使用POST跳转到登录页面
+            window.location.href = '/login';
+        }
 </script>
 {% endblock %}
 
