@@ -14,7 +14,7 @@
     {% for score in scores %}
     <tr>
         <td>{{ score.username }}</td>
-        <td>{{ score.score }}</td>
+        <td>{{ score.score |floatformat:0}}</td>
         <td>{{ score.upload_time}}</td>
     </tr>
     </tbody>

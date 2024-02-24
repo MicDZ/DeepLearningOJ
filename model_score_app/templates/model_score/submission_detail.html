@@ -4,6 +4,7 @@
 <!-- model_score/templates/model_score/ranklist.html -->
 <h1>提交记录</h1>
 <table>
+    {% for score in scores %}
     <tbody>
     <tr>
         <td>姓名</td>
@@ -11,12 +12,43 @@
         <td>上传时间</td>
         <td>状态</td>
     </tr>
-    {% for score in scores %}
+
     <tr>
         <td>{{ score.username }}</td>
-        <td>{{ score.score }}</td>
+<!--        保留一位小数-->
+        <td>{{ score.score|floatformat:0 }}</td>
         <td>{{ score.upload_time}}</td>
         <td>{{ score.status}}</td>
+<!--        显示十个类别的得分细节-->
+<!--        <td>{{ score.detail}}</td>-->
+    </tr>
+    </tbody>
+    </table>
+<table>
+    <tbody>
+   <tr>
+        <td>0</td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+    </tr>
+    <tr>
+        <td>{{ score.detail.0 |floatformat:0}}</td>
+        <td>{{ score.detail.1 |floatformat:0}}</td>
+        <td>{{ score.detail.2 |floatformat:0}}</td>
+        <td>{{ score.detail.3 |floatformat:0}}</td>
+        <td>{{ score.detail.4 |floatformat:0}}</td>
+        <td>{{ score.detail.5 |floatformat:0}}</td>
+        <td>{{ score.detail.6 |floatformat:0}}</td>
+        <td>{{ score.detail.7 |floatformat:0}}</td>
+        <td>{{ score.detail.8 |floatformat:0}}</td>
+        <td>{{ score.detail.9 |floatformat:0}}</td>
     </tr>
     </tbody>
 

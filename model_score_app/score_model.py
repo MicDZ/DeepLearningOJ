@@ -6,7 +6,7 @@ from torchvision.transforms import transforms
 
 
 from celery import shared_task
-from .models import ModelScore, FileUpload
+from .models import ModelScore
 
 
 class TimeoutException(Exception):
@@ -67,7 +67,7 @@ def evaluate(model, folder_path, device):
     scores = [f'{int(correct[i])}/{int(total[i])}' for i in range(10)]
     overall_score = sum(correct) / sum(total)
 
-    return 'Success',  overall_score
+    return 'Success',  overall_score, correct
 
 
 @shared_task(bind=True, expires=60)
@@ -89,7 +89,7 @@ def score_model(self, file_id):
     # model.eval()
     # model.to(device)
     folder_path = './test_data/handwritten_ocr'
-    status, score = evaluate(model, folder_path, device)
-
+    status, score, detail_scores = evaluate(model, folder_path, device)
     ModelScore.objects.filter(id=file_id).update(score=score * 100, status=status)
+    ModelScore.objects.filter(id=file_id).update(class0=detail_scores[0], class1=detail_scores[1], class2=detail_scores[2], class3=detail_scores[3], class4=detail_scores[4], class5=detail_scores[5], class6=detail_scores[6], class7=detail_scores[7], class8=detail_scores[8], class9=detail_scores[9])
     return

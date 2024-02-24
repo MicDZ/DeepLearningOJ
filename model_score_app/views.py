@@ -7,7 +7,7 @@ from django.core.files.base import ContentFile
 from django.contrib import messages
 from django.http import HttpResponseBadRequest
 from .score_model import score_model
-from .models import ModelScore, FileUpload, User
+from .models import ModelScore, User
 from django.db.models import Max
 import uuid
 from django.utils import timezone
@@ -64,9 +64,8 @@ def upload_view(request):
 
 
 def ranklist_view(request):
-   # 获取每个用户的最高分及对应的上传时间
-   highest_scores = ModelScore.objects.values('username').annotate(max_score=Max('score'), max_upload_time=Max('upload_time')).order_by('-max_score')
-
+   # 获取每个用户的最高分及对应的上传时间，先按分数排序，分数相同则按上传时间排序，先上传的在前
+   highest_scores = ModelScore.objects.values('username').annotate(max_score=Max('score'), max_upload_time=Max('upload_time')).order_by('-max_score', 'max_upload_time')
 
    # 将结果转换为易于渲染的列表
    ranked_users = []
@@ -111,6 +110,7 @@ def submissions_view(request):
 
 def submission_detail_view(request, file_id):
     # 获取对应的记录
+    print("in")
     submission = ModelScore.objects.get(id=file_id)
     scores = []
     uploaded_at_in_utc = submission.upload_time
@@ -128,6 +128,10 @@ def submission_detail_view(request, file_id):
         'score': submission.score,
         'upload_time':  uploaded_at_in_bj.strftime("%m-%d %H:%M"),
         'status': submission.status,
+        'detail': [
+            submission.class0, submission.class1, submission.class2, submission.class3, submission.class4,
+            submission.class5, submission.class6, submission.class7, submission.class8, submission.class9
+        ]
     }
     scores.append(score)
     context = {

@@ -9,6 +9,22 @@
   <!-- 这里可以引入公共CSS、JS文件或者Meta标签 -->
   {% load static %}
   <link rel="stylesheet" href="{% static 'main.css' %}">
+  <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+          max-width: 800px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
 
